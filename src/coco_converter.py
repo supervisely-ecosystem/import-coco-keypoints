@@ -120,20 +120,18 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         name_cat_id_map = coco_category_to_class_name(coco_categories)
         obj_class_name = name_cat_id_map[object["category_id"]]
         obj_class = meta.get_obj_class(obj_class_name)
-        
-            
-        # if len(set(object["keypoints"])) == 1: # keypoint coords all 0
-            # continue
-        
+
+
         keypoints = list(get_coords(object["keypoints"]))
         skeletons = coco_categories[0]["keypoints"]
-        
+
         nodes = []
         for coords, keypoint_name in zip(keypoints, skeletons):
             col, row, visibility = coords
             v = False
-            if visibility == 0:
+            if visibility in [0, 1]:
                 v = True
+
             node = Node(label=keypoint_name, row=row, col=col, disabled=v)
             nodes.append(node)
         label = sly.Label(GraphNodes(nodes), obj_class)
