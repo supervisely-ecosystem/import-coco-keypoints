@@ -39,12 +39,7 @@ def download_coco_annotations(dataset, archive_path, save_path, app_logger):
     link = None
     file_name = None
     ann_dir = os.path.join(save_path, "annotations")
-    if dataset in ["train2014", "val2014"]:
-        if os.path.exists(ann_dir):
-            return
-        link = g.annotations_links["trainval2014"]
-        file_name = "trainval2014.zip"
-    elif dataset in ["train2017", "val2017"]:
+    if dataset in ["train2017", "val2017"]:
         if os.path.exists(ann_dir):
             return
         link = g.annotations_links["trainval2017"]
@@ -64,9 +59,9 @@ def download_original_coco_dataset(datasets, app_logger):
         dataset_dir = os.path.join(g.COCO_BASE_DIR, dataset)
         mkdir(dataset_dir)
         archive_path = f"{dataset_dir}.zip"
-        # download_coco_images(dataset, archive_path, dataset_dir, app_logger)
-        # if not dataset.startswith("test"):
-            # download_coco_annotations(dataset, archive_path, dataset_dir, app_logger)
+        download_coco_images(dataset, archive_path, dataset_dir, app_logger)
+        if not dataset.startswith("test"):
+            download_coco_annotations(dataset, archive_path, dataset_dir, app_logger)
     return datasets
 
 
@@ -140,12 +135,7 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
 
 def start(app_logger):
     project_name = g.OUTPUT_PROJECT_NAME
-    if g.is_original:
-        coco_datasets = download_original_coco_dataset(g.original_ds, app_logger)
-        if project_name is None or project_name == "":
-            project_name = "Original COCO"
-    else:
-        coco_datasets = download_custom_coco_dataset(g.custom_ds, app_logger)
-        if project_name is None or project_name == "":
-            project_name = "Custom COCO"
+    coco_datasets = download_original_coco_dataset(g.original_ds, app_logger)
+    if project_name is None or project_name == "":
+        project_name = "Original COCO"
     return project_name, coco_datasets

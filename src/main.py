@@ -26,10 +26,10 @@ def import_coco(api: sly.Api):
             continue
 
         if coco_converter.check_dataset_for_annotation(
-            dataset_name=dataset, ann_dir=coco_ann_dir, is_original=g.is_original
+            dataset_name=dataset, ann_dir=coco_ann_dir
         ):
             coco_ann_path = coco_converter.get_ann_path(
-                ann_dir=coco_ann_dir, dataset_name=dataset, is_original=g.is_original
+                ann_dir=coco_ann_dir, dataset_name=dataset
             )
 
             coco = COCO(annotation_file=coco_ann_path)

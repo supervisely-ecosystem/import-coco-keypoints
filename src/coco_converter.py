@@ -6,7 +6,7 @@ import pycocotools.mask as mask_util
 import supervisely as sly
 from PIL import Image
 from supervisely.io.fs import file_exists, mkdir
-from supervisely.geometry.graph import Node, KeypointsTemplate
+from supervisely.geometry.graph import Node, GraphNodes, KeypointsTemplate
 
 import globals as g
 
@@ -60,7 +60,7 @@ def create_sly_meta_from_coco_categories(coco_categories):
         
         new_color = sly.color.generate_rgb(colors)
         colors.append(new_color)
-        obj_class = sly.ObjClass(name=category["name"], geometry_type=sly.AnyGeometry, color=new_color, geometry_config=geometry_config)
+        obj_class = sly.ObjClass(name=category["name"], geometry_type=sly.GraphNodes, color=new_color, geometry_config=geometry_config)
         g.META = g.META.add_obj_class(obj_class)
     return g.META
 
@@ -121,36 +121,23 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         obj_class_name = name_cat_id_map[object["category_id"]]
         obj_class = meta.get_obj_class(obj_class_name)
         
-        if obj_class_name == "person":
-            keypoints = list(get_coords(object["keypoints"]))
-            skeletons = coco_categories[0]["keypoints"]
             
-            nodes = []
-            for coords, keypoint_name in zip(keypoints, skeletons):
-                row, col, v = coords
-                node = sly.Node(label=keypoint_name, row=row, col=col)
-                nodes.append(node)
-            label = sly.Label(sly.GraphNodes(nodes), obj_class)
-            labels.append(label)
+        # if len(set(object["keypoints"])) == 1: # keypoint coords all 0
+            # continue
         
-        if type(object["segmentation"]) is dict:
-            polygons = convert_rle_mask_to_polygon(object)
-            for polygon in polygons:
-                figure = polygon
-                label = sly.Label(figure, obj_class)
-                labels.append(label)
-        elif type(object["segmentation"]) is list and object["segmentation"]:
-            figure = convert_polygon_vertices(object)
-            label = sly.Label(figure, obj_class)
-            labels.append(label)
-
-        bbox = object["bbox"]
-        xmin = bbox[0]
-        ymin = bbox[1]
-        xmax = xmin + bbox[2]
-        ymax = ymin + bbox[3]
-        rectangle = sly.Label(sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax), obj_class)
-        labels.append(rectangle)
+        keypoints = list(get_coords(object["keypoints"]))
+        skeletons = coco_categories[0]["keypoints"]
+        
+        nodes = []
+        for coords, keypoint_name in zip(keypoints, skeletons):
+            col, row, visibility = coords
+            v = False
+            if visibility == 0:
+                v = True
+            node = Node(label=keypoint_name, row=row, col=col, disabled=v)
+            nodes.append(node)
+        label = sly.Label(GraphNodes(nodes), obj_class)
+        labels.append(label)
     return sly.Annotation(image_size, labels)
 
 
@@ -193,16 +180,10 @@ def move_testds_to_sly_dataset(dataset):
         ds_progress.iter_done_report()
 
 
-def check_dataset_for_annotation(dataset_name, ann_dir, is_original):
-    if is_original:
-        ann_path = os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
-    else:
-        ann_path = os.path.join(ann_dir, "person_keypoints.json")
+def check_dataset_for_annotation(dataset_name, ann_dir):
+    ann_path = os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
     return bool(os.path.exists(ann_path) and os.path.isfile(ann_path))
 
 
-def get_ann_path(ann_dir, dataset_name, is_original):
-    if is_original:
-        return os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
-    else:
-        return os.path.join(ann_dir, "person_keypoints.json")
+def get_ann_path(ann_dir, dataset_name):
+    return os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")

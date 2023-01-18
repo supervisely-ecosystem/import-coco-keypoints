@@ -1,78 +1,33 @@
-<sly-field>
-  <el-tabs type="border-card" class="el-tabs-cards" v-model="state.cocoDataset">
-    <el-tab-pane name="original">
-      <el-radio slot="label" v-model="state.cocoDataset" label="original">
-        COCO datasets
-      </el-radio>
-      <sly-field>
-        <el-checkbox-group v-model="state.originalDataset">
-          <h3>COCO2017</h3>
+<sly-field title="COCO datasets">
+  <sly-field>
+    <el-checkbox-group v-model="state.originalDataset">
+      <h3>COCO2017</h3>
 
-          <div class="mt5">
-            <el-checkbox label="train2017"></el-checkbox>
-          </div>
-          <div class="mt5">
-            <el-checkbox label="val2017"></el-checkbox>
-          </div>
-          <div class="mt5">
-            <el-checkbox label="test2017"></el-checkbox>
-          </div>
-
-          <h3>COCO2014</h3>
-
-          <div class="mt15">
-            <el-checkbox label="train2014"></el-checkbox>
-          </div>
-          <div class="mt5">
-            <el-checkbox label="val2014"></el-checkbox>
-          </div>
-          <div class="mt5">
-            <el-checkbox label="test2014"></el-checkbox>
-          </div>
-        </el-checkbox-group>
-      </sly-field>
-
-      <div
-        class="fflex align-start"
-        style="flex-direction: column; margin: 0 0 20px 0"
-        v-if="!context.slyProjectId"
-      >
-        <sly-field
-          title="Result Project Name"
-          description="Enter project name manually (optional) or keep empty to generate it automatically"
-        >
-        </sly-field>
-        <el-input
-          placeholder="Enter Project Name"
-          v-model="state.projectName"
-        ></el-input>
+      <div class="mt5">
+        <el-checkbox label="train2017"></el-checkbox>
       </div>
-    </el-tab-pane>
-    <el-tab-pane name="custom">
-      <el-radio slot="label" v-model="state.cocoDataset" label="custom">
-        Custom dataset(s)
-      </el-radio>
-      <sly-field title="Path to file" description="Copy path in Team Files">
-        <el-input
-          v-model="state.customDataset"
-          placeholder="Path to archive in Team Files"
-        ></el-input>
-      </sly-field>
-      <div
-        class="fflex align-start"
-        style="flex-direction: column; margin: 0 0 20px 0"
-        v-if="!context.slyProjectId"
-      >
-        <sly-field
-          title="Result Project Name"
-          description="Enter project name manually (optional) or keep empty to generate it automatically"
-        >
-        </sly-field>
-        <el-input
-          placeholder="Enter Project Name"
-          v-model="state.projectName"
-        ></el-input>
+      <div class="mt5">
+        <el-checkbox label="val2017"></el-checkbox>
       </div>
-    </el-tab-pane>
-  </el-tabs>
+      <div class="mt5">
+        <el-checkbox label="test2017"></el-checkbox>
+      </div>
+    </el-checkbox-group>
+  </sly-field>
+
+  <div
+    class="fflex align-start"
+    style="flex-direction: column; margin: 0 0 20px 0"
+    v-if="!context.slyProjectId"
+  >
+    <sly-field
+      title="Result Project Name"
+      description="Enter project name manually (optional) or keep empty to generate it automatically"
+    >
+    </sly-field>
+    <el-input
+      placeholder="Enter Project Name"
+      v-model="state.projectName"
+    ></el-input>
+  </div>
 </sly-field>

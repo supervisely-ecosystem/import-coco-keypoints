@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "description": "Converts COCO Keypoints format to Supervisely",
   "categories": ["import", "images"],
+  "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
     "originalDataset": ["train2017", "val2017"],
@@ -13,9 +14,5 @@
   "icon": "",
   "poster": "",
   "task_location": "workspace_tasks",
-  "headless": true,
-  "min_agent_version": "6.6.7",
-  "min_instance_version": "6.5.38",
-  "entrypoint": "python -m uvicorn src.main:app --host 0.0.0.0 --port 8000",
-  "port": 8000
+  "headless": true
 }
