@@ -12,6 +12,7 @@ if sly.is_development():
 
 api = sly.Api()
 
+
 def str_to_list(data):
     data = ast.literal_eval(data)
     data = [n.strip() for n in data]
