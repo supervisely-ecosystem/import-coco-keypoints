@@ -1,8 +1,6 @@
-<sly-field title="COCO datasets">
+<sly-field title="COCO 2017 datasets">
   <sly-field>
     <el-checkbox-group v-model="state.originalDataset">
-      <h3>COCO2017</h3>
-
       <div class="mt5">
         <el-checkbox label="train2017"></el-checkbox>
       </div>
@@ -13,6 +11,15 @@
         <el-checkbox label="test2017"></el-checkbox>
       </div>
     </el-checkbox-group>
+  </sly-field>
+
+  <sly-field
+    title="Label preferences"
+    description="Keypoints that are in the image, but not visible, namely maybe behind of an object"
+  >
+    <el-checkbox v-model="state.labelVisibility" label="false"
+      >import invisible labels</el-checkbox
+    >
   </sly-field>
 
   <div

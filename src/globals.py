@@ -4,6 +4,7 @@ import os
 import supervisely as sly
 from supervisely.io.fs import mkdir
 from dotenv import load_dotenv
+from distutils.util import strtobool
 
 
 if sly.is_development():
@@ -13,7 +14,7 @@ if sly.is_development():
 api = sly.Api()
 
 
-def str_to_list(data):
+def strtolist(data):
     data = ast.literal_eval(data)
     data = [n.strip() for n in data]
     return data
@@ -40,7 +41,12 @@ ann_dir = None
 src_img_dir = None
 dst_img_dir = None
 
-original_ds = str_to_list(os.environ["modal.state.originalDataset"])
+original_ds = strtolist(os.environ["modal.state.originalDataset"])
+label_visibility = bool(strtobool(os.getenv("modal.state.labelVisibility")))
+if label_visibility:
+    label_visibility = [0]
+else:
+    label_visibility = [0, 1]
 
 images_links = {
     "train2017": "http://images.cocodataset.org/zips/train2017.zip",

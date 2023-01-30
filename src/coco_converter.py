@@ -150,7 +150,7 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         for coords, keypoint_name in zip(keypoints, skeletons):
             col, row, visibility = coords
             # v = False
-            if visibility in [0, 1]:
+            if visibility in g.label_visibility:
                 # col, row = None, None
                 # v = True
                 continue
