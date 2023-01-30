@@ -149,28 +149,31 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         nodes = []
         for coords, keypoint_name in zip(keypoints, skeletons):
             col, row, visibility = coords
-            v = False
+            # v = False
             if visibility in [0, 1]:
-                v = True
+                # col, row = None, None
+                # v = True
+                continue
 
-            node = Node(label=keypoint_name, row=row, col=col, disabled=v)
+            node = Node(label=keypoint_name, row=row, col=col)  # , disabled=v)
             nodes.append(node)
-        label = sly.Label(GraphNodes(nodes), obj_class)
 
-        # bbox
-        obj_class_bbox_name = f"{name_cat_id_map[object['category_id']]}_bbox"
-        obj_class_bbox = meta.get_obj_class(obj_class_bbox_name)
+        if len(nodes) != 0:
+            label = sly.Label(GraphNodes(nodes), obj_class)
+            labels.append(label)
 
-        bbox = object["bbox"]
-        xmin = bbox[0]
-        ymin = bbox[1]
-        xmax = xmin + bbox[2]
-        ymax = ymin + bbox[3]
-        label_bbox = sly.Label(
-            sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax), obj_class_bbox
-        )
-
-        labels.extend([label, label_bbox])
+            # bbox
+            obj_class_bbox_name = f"{name_cat_id_map[object['category_id']]}_bbox"
+            obj_class_bbox = meta.get_obj_class(obj_class_bbox_name)
+            bbox = object["bbox"]
+            xmin = bbox[0]
+            ymin = bbox[1]
+            xmax = xmin + bbox[2]
+            ymax = ymin + bbox[3]
+            label_bbox = sly.Label(
+                sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax), obj_class_bbox
+            )
+            labels.append(label_bbox)
     return sly.Annotation(img_size=image_size, labels=labels)
 
 
