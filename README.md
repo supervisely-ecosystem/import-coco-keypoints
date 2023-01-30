@@ -29,7 +29,7 @@ Application key points:
 - Supports only keypoint detection and object detection (bounding boxes) from COCO format
 - All information about dataset, licenses and images from COCO annotation file **will be lost**
 
-COCO Keypoint detection annotation format have visibility identificator:
+COCO Keypoint detection annotation format have visibility flags:
 
 - 0 Keypoint not in the image.
 - 1 Keypoint is in the image, but not visible, namely maybe behind of an object.
