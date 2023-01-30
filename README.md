@@ -1,6 +1,6 @@
 
 <div align="center" markdown>
-<img src=""/>
+<img src="https://user-images.githubusercontent.com/48913536/215463770-427a0fc2-f715-49e0-9562-c7cd726f6079.png"/>
 
 # Import COCO Keypoints
 
@@ -24,59 +24,33 @@
 App converts [COCO format](https://cocodataset.org/#home) datasets to [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi)
 
 Application key points:  
-- Import full original COCO 2017 & COCO 2014 datasets
-- Supports custom coco datasets
-- Supports only instance segmentation(polygons) and object detection(bounding boxes) from COCO format
-- All information about dataset, licenses and images from COCO annotation file **will be lost**
-- Backward compatible with [Export to COCO](https://github.com/supervisely-ecosystem/export-to-coco)
 
-Custom project structure:
-```
-.
-COCO_BASE_DIRECTORY
-├── coco_dataset_1        # With annotations
-│   ├── annotations
-│   │   └── instances.json
-│   └── images
-│       ├── IMG_3861.jpeg
-│       ├── IMG_4451.jpeg
-│       └── IMG_8144.jpeg
-├── coco_dataset_2        # Dataset with empty annotations dir will be treated like dataset without annotations
-│   ├── annotations
-│   └── images
-│       ├── IMG_0748.jpeg
-│       ├── IMG_1836.jpeg
-│       └── IMG_2084.jpeg
-└── coco_dataset_3        # Without annotations
-    └── images
-        ├── IMG_0428.jpeg
-        ├── IMG_1885.jpeg
-        └── IMG_2994.jpeg
-```
+- Import full original COCO 2017 dataset
+- Supports only keypoint detection and object detection (bounding boxes) from COCO format
+- All information about dataset, licenses and images from COCO annotation file **will be lost**
 
 # How to Use
 
-**Step 1.** Run app from the `Plugins & Apps` chapter:
+**Step 1.** Run app from the `Ecosystem`:
 
 <div align="center" markdown>
-  <img src="https://i.imgur.com/2luJyn4.png"/>
+  <img src=""/>
 </div>
 
 **Step 2.** Select import mode:
 
 - Your can download selected datasets from [COCO](https://cocodataset.org/#download).  
-- Use your custom dataset in COCO format by path to your archive in `Team Files`.
 
 <div align="center" markdown>
-  <img src="https://user-images.githubusercontent.com/48913536/183898478-05fc7314-3d28-408e-bbe5-90e6522f0102.png" width="700px"/>
+  <img src="" width="700px"/>
 </div>
 
 **Step 3.** After pressing the `Run` button you will be redirected to the `Tasks` page.
 
 # Results
 
-Result project will be saved in your current `Workspace` with name `Original COCO` for original datasets and `Custom COCO` for custom datasets
+Result project will be saved in your current `Workspace` with name `Original COCO` if you haven't specified project name in the modal window.
 
 <div align="center" markdown>
-<img src="https://i.imgur.com/BJuGxtL.png"/>
+<img src=""/>
 </div>
