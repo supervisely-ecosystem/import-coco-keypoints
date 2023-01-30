@@ -28,7 +28,6 @@ WORKSPACE_ID = sly.env.workspace_id()
 META = sly.ProjectMeta()
 OUTPUT_PROJECT_NAME = os.environ.get("modal.state.projectName", "")
 
-CACHE_DIR = os.environ["DEBUG_CACHE_DIR"]
 STORAGE_DIR = os.path.join(sly.app.get_data_dir(), "storage_dir")
 mkdir(STORAGE_DIR, True)
 COCO_BASE_DIR = os.path.join(STORAGE_DIR, "coco_base_dir")
