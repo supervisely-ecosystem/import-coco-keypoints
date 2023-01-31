@@ -35,7 +35,7 @@ COCO Keypoint detection annotation format have visibility flags:
 - 1 Keypoint is in the image, but not visible, namely maybe behind of an object.
 - 2 Keypoint looks clearly, not hidden.
 
-All keypoints with 0 visibility are ignored and will not be present in the project.
+All keypoints with 0 visibility are ignored and will not be presented in the project.
 As for other 2: you can specify label preferences in the modal window whether you want to include key points that are labeled, but not visible or import only clearly visible keypoints.
 
 |                                                              Visibility = 1                                                               |                                                              Visibility = 2                                                               |

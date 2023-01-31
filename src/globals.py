@@ -43,9 +43,9 @@ dst_img_dir = None
 original_ds = strtolist(os.environ["modal.state.originalDataset"])
 label_visibility = bool(strtobool(os.getenv("modal.state.labelVisibility")))
 if label_visibility:
-    label_visibility = [0]
-else:
     label_visibility = [0, 1]
+else:
+    label_visibility = [0]
 
 images_links = {
     "train2017": "http://images.cocodataset.org/zips/train2017.zip",

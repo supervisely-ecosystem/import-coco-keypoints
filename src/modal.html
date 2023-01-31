@@ -15,10 +15,10 @@
 
   <sly-field
     title="Label preferences"
-    description="Keypoints that are in the image, but not visible, namely maybe behind of an object"
+    description="Choose whether you want to include key points that are labeled, but not visible or import only clearly visible keypoints"
   >
     <el-checkbox v-model="state.labelVisibility" label="false"
-      >import invisible labels</el-checkbox
+      >import only visible keypoints</el-checkbox
     >
   </sly-field>
 
