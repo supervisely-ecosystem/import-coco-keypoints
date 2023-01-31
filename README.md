@@ -53,7 +53,7 @@ As for other 2: you can specify label preferences in the modal window whether yo
 **Step 2.** Select options in the modal window and run the app
 
 <div align="center" markdown>
-  <img src="https://user-images.githubusercontent.com/48913536/215511135-d4b40f88-0ad2-4338-ae10-8d0052aa8d81.png" width="500px"/>
+  <img src="https://user-images.githubusercontent.com/48913536/215732921-068a78ac-8e2b-4a2f-8307-dff21ffb2498.png" width="500px"/>
 </div>
 
 **Step 3.** After pressing the `Run` button you will be redirected to the `Tasks` page
