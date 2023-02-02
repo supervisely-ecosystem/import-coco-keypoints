@@ -3,6 +3,7 @@ import os
 import supervisely as sly
 from pycocotools.coco import COCO
 from supervisely import logger
+from supervisely.io.fs import remove_dir
 
 import coco_converter
 import coco_downloader
@@ -61,6 +62,7 @@ def import_coco(api: sly.Api):
         project_name=project_name,
         log_progress=True,
     )
+    remove_dir(g.STORAGE_DIR)
 
 
 def main():
