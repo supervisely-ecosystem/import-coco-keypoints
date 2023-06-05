@@ -69,7 +69,7 @@ Custom COCO dataset with keypoint annotations should have the following structur
 **Step 2.** Select options in the modal window and run the app
 
 <div align="center" markdown>
-  <img src="https://user-images.githubusercontent.com/48913536/215732921-068a78ac-8e2b-4a2f-8307-dff21ffb2498.png" width="500px"/>
+  <img src="https://github.com/supervisely-ecosystem/import-coco-keypoints/assets/48913536/43868abf-7788-4784-8bff-7ca123069158" width="500px"/>
 </div>
 
 **Step 3.** After pressing the `Run` button you will be redirected to the `Tasks` page

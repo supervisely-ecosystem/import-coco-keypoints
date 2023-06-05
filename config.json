@@ -8,7 +8,9 @@
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
+    "cocoDataset": "original",
     "originalDataset": ["train2017", "val2017"],
+    "customDataset": "",
     "projectName": "",
     "labelVisibility": true
   },
