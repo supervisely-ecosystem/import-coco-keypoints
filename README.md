@@ -26,6 +26,7 @@ App converts [COCO format](https://cocodataset.org/#home) datasets to [Supervise
 Application key points:  
 
 - Import full original COCO 2017 dataset
+- Import custom COCO dataset with keypoint annotations
 - Supports only keypoint detection and object detection (bounding boxes) from COCO format
 - All information about dataset, licenses and images from COCO annotation file **will be lost**
 
@@ -41,6 +42,21 @@ As for other 2: you can specify label preferences in the modal window whether yo
 |                                                              Visibility = 1                                                               |                                                              Visibility = 2                                                               |
 | :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
 | <img src="https://user-images.githubusercontent.com/48913536/215511152-c6d181be-9bb8-4b39-a43e-0b6ba9cdb3d6.png" style="max-width:100%;"> | <img src="https://user-images.githubusercontent.com/48913536/215511138-d909dd0e-bf2d-4686-80c8-586ade92c271.png" style="max-width:100%;"> |
+
+Custom COCO dataset with keypoint annotations should have the following structure:
+
+```text
+📦Project or 🗃️Archive
+ ┗ 📂custom_ds
+   ┣ 📂annotations
+   ┃ ┗ 📜custom_ann.json
+   ┗ 📂images
+     ┣ 🖼️0001.png
+     ┣ 🖼️0002.png
+     ┣ 🖼️0003.png
+     ┣ 🖼️0004.png
+     ┗ 🖼️0005.png
+```
 
 # How to Run
 
