@@ -12,7 +12,7 @@ from supervisely.geometry.rectangle import Rectangle
 import globals as g
 
 
-def create_geometry_config():
+def create_orig_geometry_config():
     template = KeypointsTemplate()
     # add keypoints
     template.add_point(label="nose", row=635, col=427)
@@ -55,7 +55,29 @@ def create_geometry_config():
     return template
 
 
-def create_sly_meta_from_coco_categories(coco_categories):
+def create_custom_geometry_config(num_keypoints=None, cat_labels=None, cat_edges=None):
+    template = KeypointsTemplate()
+
+    if cat_labels is None:
+        if num_keypoints is None:
+            raise ValueError(
+                "Number of keypoints can not be specified, please check your annotation (categories: num_keypoints)"
+            )
+        for p in list(range(num_keypoints)):
+            template.add_point(label=str(p), row=0, col=0)
+    else:
+        for label in cat_labels:
+            template.add_point(label=label, row=0, col=0)
+
+    if cat_edges is not None and cat_labels is not None:
+        for edge in cat_edges:
+            template.add_edge(src=cat_labels[edge[0]], dst=cat_labels[edge[1]])
+    else:
+        sly.logger.info("Edges can not be mapped without skeleton, please check your annotation")
+    return template
+
+
+def create_sly_meta_from_coco_categories(coco_categories, coco_images=None, coco_anns=None):
     colors = []
     for category in coco_categories:
         if category["name"] in [obj_class.name for obj_class in g.META.obj_classes]:
@@ -64,13 +86,27 @@ def create_sly_meta_from_coco_categories(coco_categories):
             continue
 
         geometry_config = None
-        if category["name"] == "person":
-            geometry_config = create_geometry_config()
-        else:
-            raise NotImplementedError(
-                "Current version of the application works only for "
-                "COCO 2017 Keypoint Detection Task, "
-                "which has only one class: 'person'"
+        if g.ds_mode == "orig":
+            geometry_config = create_orig_geometry_config()
+        elif g.ds_mode == "custom":
+            cat_num_kp = None
+            # look for labels
+            cat_labels = category.get("keypoints", None)
+            # look for edges
+            cat_edges = category.get("skeleton", None)
+
+            # find object with most keypoints of this category (num_keypoints)
+            if cat_labels is None:
+                cat_num_kp = []
+                for img_id, img_info in coco_images.items():
+                    ann_p = coco_anns[img_id]
+                    for ann in ann_p:
+                        if ann["category_id"] == category["id"]:
+                            cat_num_kp.append(ann["num_keypoints"])
+                cat_num_kp = max(cat_num_kp)
+
+            geometry_config = create_custom_geometry_config(
+                num_keypoints=cat_num_kp, cat_labels=cat_labels, cat_edges=cat_edges
             )
 
         new_color = sly.color.generate_rgb(colors)
@@ -89,14 +125,14 @@ def create_sly_meta_from_coco_categories(coco_categories):
     return g.META
 
 
-def get_sly_meta_from_coco(coco_categories):
+def get_sly_meta_from_coco(coco_categories, coco_images=None, coco_anns=None):
     path_to_meta = os.path.join(g.SLY_BASE_DIR, "meta.json")
-    g.META = dump_meta(coco_categories, path_to_meta)
+    g.META = dump_meta(coco_categories, path_to_meta, coco_images, coco_anns)
     return g.META
 
 
-def dump_meta(coco_categories, path_to_meta):
-    g.META = create_sly_meta_from_coco_categories(coco_categories)
+def dump_meta(coco_categories, path_to_meta, coco_images=None, coco_anns=None):
+    g.META = create_sly_meta_from_coco_categories(coco_categories, coco_images, coco_anns)
     meta_json = g.META.to_json()
     sly.json.dump_json_file(meta_json, path_to_meta)
     return g.META
@@ -144,7 +180,10 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         obj_class = meta.get_obj_class(obj_class_name)
 
         keypoints = list(get_coords(object["keypoints"]))
-        skeletons = coco_categories[0]["keypoints"]
+        if g.ds_mode == "custom":
+            skeletons = [None] * len(keypoints)
+        else:
+            skeletons = coco_categories[0]["keypoints"]
 
         nodes = []
         for coords, keypoint_name in zip(keypoints, skeletons):
@@ -170,10 +209,10 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
             ymin = bbox[1]
             xmax = xmin + bbox[2]
             ymax = ymin + bbox[3]
-            label_bbox = sly.Label(
-                sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax), obj_class_bbox
-            )
-            labels.append(label_bbox)
+            # label_bbox = sly.Label(
+            #     sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax), obj_class_bbox
+            # )
+            # labels.append(label_bbox)
     return sly.Annotation(img_size=image_size, labels=labels)
 
 
@@ -217,9 +256,21 @@ def move_testds_to_sly_dataset(dataset):
 
 
 def check_dataset_for_annotation(dataset_name, ann_dir):
-    ann_path = os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
+    if g.ds_mode == "original":
+        ann_path = os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
+    elif g.ds_mode == "custom":
+        ann_path = os.listdir(ann_dir)
+        if len(ann_path) == 0:
+            raise ValueError(f"Annotation file not found in {ann_dir}")
+        elif ann_path[0].endswith(".json"):
+            ann_path = os.path.join(ann_dir, ann_path[0])
+        else:
+            raise ValueError(f"Annotation file must be in '.json' format: {ann_path[0]}")
     return bool(os.path.exists(ann_path) and os.path.isfile(ann_path))
 
 
 def get_ann_path(ann_dir, dataset_name):
-    return os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
+    if g.ds_mode == "original":
+        return os.path.join(ann_dir, f"person_keypoints_{dataset_name}.json")
+    elif g.ds_mode == "custom":
+        return os.path.join(ann_dir, os.listdir(ann_dir)[0])

@@ -40,7 +40,11 @@ ann_dir = None
 src_img_dir = None
 dst_img_dir = None
 
+ds_mode = os.environ["modal.state.cocoDataset"]
+
 original_ds = strtolist(os.environ["modal.state.originalDataset"])
+custom_ds = os.environ["modal.state.customDataset"]
+
 label_visibility = bool(strtobool(os.getenv("modal.state.labelVisibility")))
 if label_visibility:
     label_visibility = [0, 1]
