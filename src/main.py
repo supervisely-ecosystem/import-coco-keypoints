@@ -18,7 +18,6 @@ def import_coco(api: sly.Api):
 
         if coco_converter.check_dataset_for_annotation(dataset_name=dataset, ann_dir=coco_ann_dir):
             coco_ann_path = coco_converter.get_ann_path(ann_dir=coco_ann_dir, dataset_name=dataset)
-
             coco = COCO(annotation_file=coco_ann_path)
             categories = coco.loadCats(ids=coco.getCatIds())
             coco_images = coco.imgs
@@ -27,7 +26,9 @@ def import_coco(api: sly.Api):
             sly_dataset_dir = coco_converter.create_sly_dataset_dir(dataset_name=dataset)
             g.img_dir = os.path.join(sly_dataset_dir, "img")
             g.ann_dir = os.path.join(sly_dataset_dir, "ann")
-            meta = coco_converter.get_sly_meta_from_coco(coco_categories=categories)
+            meta = coco_converter.get_sly_meta_from_coco(
+                coco_categories=categories, coco_images=coco_images, coco_anns=coco_anns
+            )
 
             ds_progress = sly.Progress(
                 message=f"Converting dataset: {dataset}",

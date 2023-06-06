@@ -93,6 +93,7 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
     if g.api.file.exists(g.TEAM_ID, path_to_remote_dataset):
         archive_name = os.path.basename(os.path.normpath(path_to_remote_dataset))
         archive_path = os.path.join(g.COCO_BASE_DIR, archive_name)
+        # extract_path =
         download_file_from_supervisely(
             path_to_remote_dataset,
             archive_path,
@@ -107,7 +108,6 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
             len(os.listdir(g.COCO_BASE_DIR)) == 1
         ), "ERROR: Archive must contain only 1 project folder with datasets in COCO format."
         app_logger.info("Archive has been unpacked.")
-        g.COCO_BASE_DIR = os.path.join(g.COCO_BASE_DIR, os.listdir(g.COCO_BASE_DIR)[0])
     elif g.api.file.dir_exists(g.TEAM_ID, path_to_remote_dataset):
         dir_name = os.path.basename(os.path.normpath(path_to_remote_dataset))
         dir_path = os.path.join(g.COCO_BASE_DIR, dir_name)
@@ -117,9 +117,6 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
             f'Download "{dir_name}"',
             app_logger,
         )
-        g.COCO_BASE_DIR = os.path.join(
-            g.COCO_BASE_DIR, os.path.basename(os.path.normpath(path_to_remote_dataset))
-        )
     else:
         raise ValueError(f"File or directory {path_to_remote_dataset} not found in Team Files.")
     return list(os.listdir(g.COCO_BASE_DIR))
@@ -127,7 +124,12 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
 
 def start(app_logger):
     project_name = g.OUTPUT_PROJECT_NAME
-    coco_datasets = download_original_coco_dataset(g.original_ds, app_logger)
-    if project_name is None or project_name == "":
-        project_name = "Original COCO"
+    if g.ds_mode == "original":
+        coco_datasets = download_original_coco_dataset(g.original_ds, app_logger)
+        if project_name is None or project_name == "":
+            project_name = "Original COCO Keypoints"
+    elif g.ds_mode == "custom":
+        coco_datasets = download_custom_coco_dataset(g.custom_ds, app_logger)
+        if project_name is None or project_name == "":
+            project_name = "Custom COCO Keypoints"
     return project_name, coco_datasets
