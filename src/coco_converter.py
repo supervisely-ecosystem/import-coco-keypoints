@@ -86,7 +86,7 @@ def create_sly_meta_from_coco_categories(coco_categories, coco_images=None, coco
             continue
 
         geometry_config = None
-        if g.ds_mode == "orig":
+        if g.ds_mode == "original":
             geometry_config = create_orig_geometry_config()
         elif g.ds_mode == "custom":
             cat_num_kp = None
