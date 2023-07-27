@@ -1,22 +1,28 @@
 {
-  "type": "app",
-  "name": "Import COCO Keypoints",
-  "version": "2.0.0",
-  "description": "Converts COCO Keypoints format to Supervisely",
-  "categories": ["import", "images"],
-  "docker_image": "supervisely/coco-dataset:1.0.0",
-  "main_script": "src/main.py",
-  "modal_template": "src/modal.html",
-  "modal_template_state": {
-    "cocoDataset": "original",
-    "originalDataset": ["train2017", "val2017"],
-    "customDataset": "",
-    "projectName": "",
-    "labelVisibility": true
-  },
-  "icon": "https://user-images.githubusercontent.com/48913536/215463787-1e2d5b6f-374d-4476-a5b4-66f9c4412dc4.png",
-  "icon_background": "#FFFFFF",
-  "poster": "https://user-images.githubusercontent.com/48913536/215463770-427a0fc2-f715-49e0-9562-c7cd726f6079.png",
-  "task_location": "workspace_tasks",
-  "headless": true
+    "type": "app",
+    "name": "Import COCO Keypoints",
+    "version": "2.0.0",
+    "description": "Converts COCO Keypoints format to Supervisely",
+    "categories": [
+        "import",
+        "images"
+    ],
+    "docker_image": "supervisely/import-export:0.0.2",
+    "main_script": "src/main.py",
+    "modal_template": "src/modal.html",
+    "modal_template_state": {
+        "cocoDataset": "original",
+        "originalDataset": [
+            "train2017",
+            "val2017"
+        ],
+        "customDataset": "",
+        "projectName": "",
+        "labelVisibility": true
+    },
+    "icon": "https://user-images.githubusercontent.com/48913536/215463787-1e2d5b6f-374d-4476-a5b4-66f9c4412dc4.png",
+    "icon_background": "#FFFFFF",
+    "poster": "https://user-images.githubusercontent.com/48913536/215463770-427a0fc2-f715-49e0-9562-c7cd726f6079.png",
+    "task_location": "workspace_tasks",
+    "headless": true
 }
