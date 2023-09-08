@@ -71,7 +71,7 @@ def create_custom_geometry_config(num_keypoints=None, cat_labels=None, cat_edges
 
     if cat_edges is not None and cat_labels is not None:
         for edge in cat_edges:
-            template.add_edge(src=cat_labels[edge[0]], dst=cat_labels[edge[1]])
+            template.add_edge(src=cat_labels[edge[0] - 1], dst=cat_labels[edge[1] - 1])
     else:
         sly.logger.info("Edges can not be mapped without skeleton, please check your annotation")
     return template
