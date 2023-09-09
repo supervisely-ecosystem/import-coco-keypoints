@@ -180,10 +180,11 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         obj_class = meta.get_obj_class(obj_class_name)
 
         keypoints = list(get_coords(object["keypoints"]))
-        if g.ds_mode == "custom":
-            skeletons = [None] * len(keypoints)
-        else:
-            skeletons = coco_categories[0]["keypoints"]
+        # if g.ds_mode == "custom":
+        #     skeletons = [None] * len(keypoints)
+        # else:
+        sly.logger.info(coco_categories)
+        skeletons = coco_categories[0]["keypoints"]
 
         nodes = []
         for coords, keypoint_name in zip(keypoints, skeletons):
