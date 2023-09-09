@@ -104,9 +104,6 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
         app_logger.info("Unpacking archive...")
         shutil.unpack_archive(archive_path, g.COCO_BASE_DIR)
         silent_remove(archive_path)
-        assert (
-            len(os.listdir(g.COCO_BASE_DIR)) == 1
-        ), "ERROR: Archive must contain only 1 project folder with datasets in COCO format."
         app_logger.info("Archive has been unpacked.")
     elif g.api.file.dir_exists(g.TEAM_ID, path_to_remote_dataset):
         dir_name = os.path.basename(os.path.normpath(path_to_remote_dataset))
@@ -119,7 +116,14 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
         )
     else:
         raise ValueError(f"File or directory {path_to_remote_dataset} not found in Team Files.")
-    return list(os.listdir(g.COCO_BASE_DIR))
+
+    def check_function(path):
+        images_dir = os.path.join(directory, "images")
+        annotations_dir = os.path.join(directory, "annotations")
+        return os.path.isdir(images_dir) and os.path.isdir(annotations_dir)
+
+    datasets = [ds for ds in sly.fs.dirs_filter(g.COCO_BASE_DIR, check_function)]
+    return datasets
 
 
 def start(app_logger):
