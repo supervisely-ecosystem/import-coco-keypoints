@@ -118,8 +118,8 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
         raise ValueError(f"File or directory {path_to_remote_dataset} not found in Team Files.")
 
     def check_function(path):
-        images_dir = os.path.join(directory, "images")
-        annotations_dir = os.path.join(directory, "annotations")
+        images_dir = os.path.join(path, "images")
+        annotations_dir = os.path.join(path, "annotations")
         return os.path.isdir(images_dir) and os.path.isdir(annotations_dir)
 
     datasets = [ds for ds in sly.fs.dirs_filter(g.COCO_BASE_DIR, check_function)]
