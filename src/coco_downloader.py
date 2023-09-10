@@ -102,7 +102,7 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
             app_logger,
         )
         app_logger.info("Unpacking archive...")
-        shutil.unpack_archive(archive_path, g.COCO_BASE_DIR)
+        sly.fs.unpack_archive(archive_path, g.COCO_BASE_DIR)
         silent_remove(archive_path)
         app_logger.info("Archive has been unpacked.")
     elif g.api.file.dir_exists(g.TEAM_ID, path_to_remote_dataset):
@@ -114,6 +114,7 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
             f'Download "{dir_name}"',
             app_logger,
         )
+        sly.fs.remove_junk_from_dir(dir_path)
     else:
         raise ValueError(f"File or directory {path_to_remote_dataset} not found in Team Files.")
 
@@ -123,7 +124,9 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
         return os.path.isdir(images_dir) and os.path.isdir(annotations_dir)
 
     datasets = [ds for ds in sly.fs.dirs_filter(g.COCO_BASE_DIR, check_function)]
-    return datasets
+    path_components = [os.path.normpath(path).split(os.path.sep) for path in datasets]
+    g.COCO_BASE_DIR = os.path.sep.join(os.path.commonprefix(path_components))
+    return [os.path.basename(os.path.normpath(path)) for path in datasets]
 
 
 def start(app_logger):
