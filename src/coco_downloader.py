@@ -124,8 +124,15 @@ def download_custom_coco_dataset(path_to_remote_dataset, app_logger):
         return os.path.isdir(images_dir) and os.path.isdir(annotations_dir)
 
     datasets = [ds for ds in sly.fs.dirs_filter(g.COCO_BASE_DIR, check_function)]
-    path_components = [os.path.normpath(path).split(os.path.sep) for path in datasets]
-    g.COCO_BASE_DIR = os.path.sep.join(os.path.commonprefix(path_components))
+    if len(datasets) == 0:
+        raise ValueError(
+            f"Directory {path_to_remote_dataset} does not contain COCO dataset structure."
+        )
+    elif len(datasets) == 1:
+        g.COCO_BASE_DIR = os.path.dirname(os.path.normpath(datasets[0]))
+    else:
+        path_components = [os.path.normpath(path).split(os.path.sep) for path in datasets]
+        g.COCO_BASE_DIR = os.path.sep.join(os.path.commonprefix(path_components))
     return [os.path.basename(os.path.normpath(path)) for path in datasets]
 
 
