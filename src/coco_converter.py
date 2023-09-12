@@ -183,7 +183,6 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
         # if g.ds_mode == "custom":
         #     skeletons = [None] * len(keypoints)
         # else:
-        sly.logger.info(coco_categories)
         skeletons = coco_categories[0]["keypoints"]
 
         nodes = []
