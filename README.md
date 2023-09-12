@@ -27,7 +27,7 @@ Application key points:
 
 - Import full original COCO 2017 dataset
 - Import custom COCO dataset with keypoint annotations
-- Supports only keypoint detection and object detection (bounding boxes) from COCO format
+- Supports only keypoint detection from COCO format (bounding boxes are not supported at the moment)
 - All information about dataset, licenses and images from COCO annotation file **will be lost**
 
 COCO Keypoint detection annotation format have visibility flags:
