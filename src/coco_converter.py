@@ -1,5 +1,6 @@
 import os
 import shutil
+import uuid
 
 import numpy as np
 import pycocotools.mask as mask_util
@@ -198,21 +199,26 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
             nodes.append(node)
 
         if len(nodes) != 0:
-            label = sly.Label(GraphNodes(nodes), obj_class)
+            key = uuid.uuid4().hex
+            label = sly.Label(GraphNodes(nodes), obj_class, binding_key=key)
             labels.append(label)
 
             # bbox
             obj_class_bbox_name = f"{name_cat_id_map[object['category_id']]}_bbox"
             obj_class_bbox = meta.get_obj_class(obj_class_bbox_name)
-            bbox = object["bbox"]
+            bbox = object.get("bbox")
+            if bbox is None or len(bbox) == 0:
+                continue
             xmin = bbox[0]
             ymin = bbox[1]
             xmax = xmin + bbox[2]
             ymax = ymin + bbox[3]
-            # label_bbox = sly.Label(
-            #     sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax), obj_class_bbox
-            # )
-            # labels.append(label_bbox)
+            label_bbox = sly.Label(
+                sly.Rectangle(top=ymin, left=xmin, bottom=ymax, right=xmax),
+                obj_class_bbox,
+                binding_key=key,
+            )
+            labels.append(label_bbox)
     return sly.Annotation(img_size=image_size, labels=labels)
 
 
