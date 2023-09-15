@@ -45,6 +45,8 @@ As for other 2: you can specify label preferences in the modal window whether yo
 
 Custom COCO dataset with keypoint annotations should have the following structure:
 
+ℹ️ You can download the archive with data example [here](https://github.com/supervisely-ecosystem/import-coco-keypoints/files/12621851/Person_Keypoints.zip) [20.3 MB].<br>
+
 ```text
 📦Project or 🗃️Archive
  ┗ 📂custom_ds
