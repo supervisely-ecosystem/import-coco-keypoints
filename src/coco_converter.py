@@ -200,8 +200,7 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
 
         if len(nodes) != 0:
             key = uuid.uuid4().hex
-            label = sly.Label(GraphNodes(nodes), obj_class, binding_key=key)
-            labels.append(label)
+            label_graph = sly.Label(GraphNodes(nodes), obj_class, binding_key=key)
 
             # bbox
             obj_class_bbox_name = f"{name_cat_id_map[object['category_id']]}_bbox"
@@ -219,6 +218,7 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
                 binding_key=key,
             )
             labels.append(label_bbox)
+            labels.append(label_graph) # to keep correct group name and objects order
     return sly.Annotation(img_size=image_size, labels=labels)
 
 
