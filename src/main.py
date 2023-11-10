@@ -2,7 +2,7 @@ import os
 
 import supervisely as sly
 from pycocotools.coco import COCO
-from supervisely import logger
+from supervisely import handle_exceptions, logger
 from supervisely.io.fs import remove_dir
 
 import coco_converter
@@ -10,6 +10,7 @@ import coco_downloader
 import globals as g
 
 
+@handle_exceptions
 def import_coco(api: sly.Api):
     project_name, coco_datasets = coco_downloader.start(logger)
     for dataset in coco_datasets:
