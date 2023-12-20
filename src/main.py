@@ -19,7 +19,12 @@ def import_coco(api: sly.Api):
 
         if coco_converter.check_dataset_for_annotation(dataset_name=dataset, ann_dir=coco_ann_dir):
             coco_ann_path = coco_converter.get_ann_path(ann_dir=coco_ann_dir, dataset_name=dataset)
-            coco = COCO(annotation_file=coco_ann_path)
+            try:
+                coco = COCO(annotation_file=coco_ann_path)
+            except Exception as e:
+                raise Exception(
+                    f"Incorrect COCO annotation file: {coco_ann_path}. Error: {repr(e)}"
+                )
             categories = coco.loadCats(ids=coco.getCatIds())
             coco_images = coco.imgs
             coco_anns = coco.imgToAnns
