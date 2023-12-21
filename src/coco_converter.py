@@ -145,7 +145,7 @@ def get_coco_annotations_for_current_image(coco_image, coco_anns):
 
 
 def coco_category_to_class_name(coco_categories):
-    return {category["id"]: category["name"] for category in coco_categories}
+    return {category["id"]: category for category in coco_categories}
 
 
 def convert_polygon_vertices(coco_ann):
@@ -175,19 +175,25 @@ def get_coords(keypoints):
 def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_size):
     labels = []
     for object in coco_ann:
+        obj_category_id = object["category_id"]
         # keypoint
-        name_cat_id_map = coco_category_to_class_name(coco_categories)
-        obj_class_name = name_cat_id_map[object["category_id"]]
+        cat_id_map = coco_category_to_class_name(coco_categories)
+        obj_class_name = cat_id_map[obj_category_id].get("name")
         obj_class = meta.get_obj_class(obj_class_name)
+        if obj_class_name is None or obj_class is None:
+            sly.logger.warn(f"Object class {obj_class_name} not found in COCO categories.")
+            continue
 
         keypoints = list(get_coords(object["keypoints"]))
-        # if g.ds_mode == "custom":
-        #     skeletons = [None] * len(keypoints)
-        # else:
-        skeletons = coco_categories[0]["keypoints"]
+
+
+        keypoint_names = cat_id_map[obj_category_id].get("keypoints")
+        if keypoint_names is None:
+            sly.logger.warn(f"Keypoints field not found in {obj_class_name} COCO category.")
+            continue
 
         nodes = []
-        for coords, keypoint_name in zip(keypoints, skeletons):
+        for coords, keypoint_name in zip(keypoints, keypoint_names):
             col, row, visibility = coords
             # v = False
             if visibility in g.label_visibility:
@@ -203,7 +209,7 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
             label_graph = sly.Label(GraphNodes(nodes), obj_class, binding_key=key)
 
             # bbox
-            obj_class_bbox_name = f"{name_cat_id_map[object['category_id']]}_bbox"
+            obj_class_bbox_name = f"{obj_class_name}_bbox"
             obj_class_bbox = meta.get_obj_class(obj_class_bbox_name)
             bbox = object.get("bbox")
             if bbox is None or len(bbox) == 0:

@@ -2,7 +2,8 @@ import os
 
 import supervisely as sly
 from pycocotools.coco import COCO
-from supervisely import handle_exceptions, logger
+from supervisely import logger
+from supervisely.io.exception_handlers import handle_exception
 from supervisely.io.fs import remove_dir
 
 import coco_converter
@@ -10,15 +11,18 @@ import coco_downloader
 import globals as g
 
 
-@handle_exceptions
 def import_coco(api: sly.Api):
     project_name, coco_datasets = coco_downloader.start(logger)
     for dataset in coco_datasets:
         coco_dataset_dir = os.path.join(g.COCO_BASE_DIR, dataset)
         coco_ann_dir = os.path.join(coco_dataset_dir, "annotations")
 
-        if coco_converter.check_dataset_for_annotation(dataset_name=dataset, ann_dir=coco_ann_dir):
-            coco_ann_path = coco_converter.get_ann_path(ann_dir=coco_ann_dir, dataset_name=dataset)
+        if coco_converter.check_dataset_for_annotation(
+            dataset_name=dataset, ann_dir=coco_ann_dir
+        ):
+            coco_ann_path = coco_converter.get_ann_path(
+                ann_dir=coco_ann_dir, dataset_name=dataset
+            )
             try:
                 coco = COCO(annotation_file=coco_ann_path)
             except Exception as e:
@@ -29,7 +33,9 @@ def import_coco(api: sly.Api):
             coco_images = coco.imgs
             coco_anns = coco.imgToAnns
 
-            sly_dataset_dir = coco_converter.create_sly_dataset_dir(dataset_name=dataset)
+            sly_dataset_dir = coco_converter.create_sly_dataset_dir(
+                dataset_name=dataset
+            )
             g.img_dir = os.path.join(sly_dataset_dir, "img")
             g.ann_dir = os.path.join(sly_dataset_dir, "ann")
             meta = coco_converter.get_sly_meta_from_coco(
@@ -56,7 +62,9 @@ def import_coco(api: sly.Api):
                 )
                 ds_progress.iter_done_report()
         else:
-            sly_dataset_dir = coco_converter.create_sly_dataset_dir(dataset_name=dataset)
+            sly_dataset_dir = coco_converter.create_sly_dataset_dir(
+                dataset_name=dataset
+            )
             g.src_img_dir = os.path.join(g.COCO_BASE_DIR, dataset, "images")
             g.dst_img_dir = os.path.join(sly_dataset_dir, "img")
             g.ann_dir = os.path.join(sly_dataset_dir, "ann")
@@ -69,11 +77,21 @@ def import_coco(api: sly.Api):
         project_name=project_name,
         log_progress=True,
     )
-    remove_dir(g.STORAGE_DIR)
 
 
 def main():
-    import_coco(api=g.api)
+    try:
+        import_coco(api=g.api)
+    except Exception as e:
+        exception_handler = handle_exception(e)
+        if exception_handler:
+            raise Exception(exception_handler.get_message_for_modal_window()) from e
+        else:
+            raise e
+    finally:
+        if not sly.is_development():
+            sly.logger.info(f"Remove temp directory: {g.STORAGE_DIR}")
+            remove_dir(g.STORAGE_DIR)
 
 
 if __name__ == "__main__":
