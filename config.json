@@ -3,14 +3,20 @@
   "name": "Import COCO Keypoints",
   "version": "2.0.0",
   "description": "Converts COCO Keypoints format to Supervisely",
-  "categories": ["import", "images"],
-  "docker_image": "supervisely/import-export:6.73.45",
-  "min_instance_version": "6.8.88",
+  "categories": [
+    "import",
+    "images"
+  ],
+  "docker_image": "supervisely/import-export:6.73.59",
+  "min_instance_version": "6.9.4",
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
     "cocoDataset": "original",
-    "originalDataset": ["train2017", "val2017"],
+    "originalDataset": [
+      "train2017",
+      "val2017"
+    ],
     "customDataset": "",
     "projectName": "",
     "labelVisibility": true
