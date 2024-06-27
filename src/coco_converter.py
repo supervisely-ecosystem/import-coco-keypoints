@@ -206,14 +206,16 @@ def create_sly_ann_from_coco_annotation(meta, coco_categories, coco_ann, image_s
 
         if len(nodes) != 0:
             key = uuid.uuid4().hex
-            label_graph = sly.Label(GraphNodes(nodes), obj_class, binding_key=key)
 
             # bbox
             obj_class_bbox_name = f"{obj_class_name}_bbox"
             obj_class_bbox = meta.get_obj_class(obj_class_bbox_name)
             bbox = object.get("bbox")
             if bbox is None or len(bbox) == 0:
+                label_graph = sly.Label(GraphNodes(nodes), obj_class)
+                labels.append(label_graph)
                 continue
+            label_graph = sly.Label(GraphNodes(nodes), obj_class, binding_key=key)
             xmin = bbox[0]
             ymin = bbox[1]
             xmax = xmin + bbox[2]
