@@ -7,8 +7,8 @@
     "import",
     "images"
   ],
-  "docker_image": "supervisely/import-export:6.73.60",
-  "min_instance_version": "6.9.4",
+  "docker_image": "supervisely/import-export:6.73.160",
+  "min_instance_version": "6.11.8",
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
