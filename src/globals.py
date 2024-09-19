@@ -44,6 +44,8 @@ ds_mode = os.environ["modal.state.cocoDataset"]
 
 original_ds = strtolist(os.environ["modal.state.originalDataset"])
 custom_ds = os.environ["modal.state.customDataset"]
+if custom_ds is "":
+    raise ValueError("Please, input filepath to the custom dataset")
 
 label_visibility = bool(strtobool(os.getenv("modal.state.labelVisibility")))
 if label_visibility:
